@@ -1411,9 +1411,9 @@ def run(
         y = model(im)  # dry runs
     if half and not coreml:
         im, model = im.half(), model.half()  # to FP16
-    #shape = tuple((y[0] if isinstance(y, tuple) else y).shape)  # model output shape
 
     # Update shape for onnx rknn hack
+    #shape = tuple((y[0] if isinstance(y, tuple) else y).shape)  # model output shape
     shape = tuple(y[0].shape)  # model output shape
 
     metadata = {"stride": int(max(model.stride)), "names": model.names}  # model metadata
