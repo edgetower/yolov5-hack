@@ -60,6 +60,9 @@ import pandas as pd
 import torch
 from torch.utils.mobile_optimizer import optimize_for_mobile
 
+
+os.environ['RKNN_model_hack'] = 'npu_2'
+
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # YOLOv5 root directory
 if str(ROOT) not in sys.path:
@@ -1408,7 +1411,11 @@ def run(
         y = model(im)  # dry runs
     if half and not coreml:
         im, model = im.half(), model.half()  # to FP16
-    shape = tuple((y[0] if isinstance(y, tuple) else y).shape)  # model output shape
+    #shape = tuple((y[0] if isinstance(y, tuple) else y).shape)  # model output shape
+
+    # Update shape for onnx rknn hack
+    shape = tuple(y[0].shape)  # model output shape
+
     metadata = {"stride": int(max(model.stride)), "names": model.names}  # model metadata
     LOGGER.info(f"\n{colorstr('PyTorch:')} starting from {file} with output shape {shape} ({file_size(file):.1f} MB)")
 
